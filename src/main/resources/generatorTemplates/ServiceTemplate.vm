@@ -1,0 +1,14 @@
+package $!{basePackage}$!{servicePackage};
+
+import $!{basePackage}$!{doPackage}.$!{upperName}DO;
+
+/**
+ * $!{upperName} service
+ *
+ * @author $!{author}
+ * @date $!{datetime}
+ */
+public interface $!{upperName}Service extends BaseService<$!{upperName}DO, $!{idType}> {
+
+
+}

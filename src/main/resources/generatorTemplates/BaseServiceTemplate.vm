@@ -1,0 +1,43 @@
+package $!{basePackage}$!{servicePackage};
+
+import $!{basePackage}$!{doPackage}.IdDO;
+
+import java.util.List;
+
+/**
+* Base Service
+*
+* @author cuiwq
+* @date 2018-08-28 星期二
+*/
+public interface BaseService<T extends IdDO<ID>, ID> {
+
+    int insert(T dto);
+
+    int insertSelective(T dto);
+
+    int update(T dto);
+
+    int updateSelective(T dto);
+
+    int saveSelective(T dto);
+
+    int delete(ID id);
+
+    int deleteAllById(List<ID> list);
+
+    int deleteAll(List<T> list);
+
+    T getById(ID id);
+
+    List<T> select(T query);
+
+    T selectOne(T query);
+
+    List<T> selectAll(T query);
+
+    int count(T query);
+
+    boolean exist(T query);
+
+}

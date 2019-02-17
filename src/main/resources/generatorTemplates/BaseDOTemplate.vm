@@ -1,0 +1,58 @@
+package $!{basePackage}$!{doPackage};
+
+import java.time.LocalDateTime;
+
+/**
+* base DBO
+* 包含id, 软删除字段，创建及修改时间字段的DBO基类
+*
+* @author cuiwq
+* @date 2018-08-29 星期三
+*/
+public class BaseDO<ID> extends IdDO<ID> {
+
+	/**
+	* 是否删除：0=否，非0=是
+	*/
+	private Long isDeleted;
+
+	/**
+	* 创建时间，不可修改
+	*/
+	private LocalDateTime createTime;
+
+	/**
+	* 修改时间，不可手动修改
+	*/
+	private LocalDateTime modifyTime;
+
+	public Long getIsDeleted() {
+	    return isDeleted;
+	}
+
+	public void setIsDeleted(Long isDeleted) {
+	    this.isDeleted = isDeleted;
+	}
+
+	public LocalDateTime getCreateTime() {
+	    return createTime;
+	}
+
+	public void setCreateTime(LocalDateTime createTime) {
+	    this.createTime = createTime;
+	}
+
+	public LocalDateTime getModifyTime() {
+	    return modifyTime;
+	}
+
+	public void setModifyTime(LocalDateTime modifyTime) {
+	    this.modifyTime = modifyTime;
+	}
+
+	@Override
+	public String toString() {
+	    return super.toString() + " BaseDO{" + "isDeleted=" + isDeleted + ", createTime=" + createTime + ", modifyTime=" + modifyTime + "}";
+	}
+
+}

@@ -1,0 +1,36 @@
+package $!{basePackage}$!{doPackage};
+
+import java.io.Serializable;
+
+/**
+* ID DO
+* 只包含id的DBO基类
+* 如果不需要软删除等字段，请继承该基类
+*
+* @Author cuiwq
+* @Create 2018-09-09 星期日
+*/
+public class IdDO<ID> extends Query implements Serializable {
+
+	private static final long serialVersionUID = -1L;
+
+	private ID id;
+
+	public ID getId() {
+	    return id;
+	}
+
+	public void setId(ID id) {
+	    this.id = id;
+	}
+
+	@Override
+	public String toString() {
+	    return "IdDO{" + "id=" + id + "}";
+	}
+
+	public void trim() {
+
+	}
+
+}

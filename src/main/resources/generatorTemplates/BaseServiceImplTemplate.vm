@@ -1,0 +1,148 @@
+package com.xmd.pay.service.impl;
+
+import $!{basePackage}$!{daoPackage}.BaseDAO;
+import $!{basePackage}$!{doPackage}.IdDO;
+import $!{basePackage}$!{servicePackage}.BaseService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+* Base Service impl
+*
+* @author cuiwq
+* @date 2018-08-28 星期二
+*/
+@Transactional
+@Slf4j
+public abstract class BaseServiceImpl<T extends IdDO<ID>, ID, DAO extends BaseDAO<T, ID>> implements BaseService<T, ID> {
+
+    @Autowired
+    protected DAO dao;
+
+    @Override
+    public int insert(T dto) {
+        if(dto == null) {
+            return 0;
+        }
+        dto.trim();
+        return dao.insert(dto);
+    }
+
+    @Override
+    public int insertSelective(T dto) {
+        if(dto == null) {
+            return 0;
+        }
+        dto.trim();
+        return dao.insertSelective(dto);
+    }
+
+    @Override
+    public int update(T dto) {
+        if(dto == null) {
+            return 0;
+        }
+        dto.trim();
+        return dao.update(dto);
+    }
+
+    @Override
+    public int updateSelective(T dto) {
+        if(dto == null) {
+            return 0;
+        }
+        dto.trim();
+        return dao.updateSelective(dto);
+    }
+
+    @Override
+    public int saveSelective(T dto) {
+        if(exist(dto)) {
+            return updateSelective(dto);
+        } else {
+            return insertSelective(dto);
+        }
+    }
+
+    @Override
+    public int delete(ID id) {
+        if(id == null) {
+            return 0;
+        }
+        return dao.delete(id);
+    }
+
+    @Override
+    public int deleteAllById(List<ID> list) {
+        return dao.deleteAllById(list);
+    }
+
+    @Override
+    public int deleteAll(List<T> list) {
+        if(list == null || list.size() == 0) {
+            return 0;
+        }
+        return dao.deleteAllById(list.stream().map(IdDO::getId).collect(Collectors.toList()));
+    }
+
+    @Override
+    public T getById(ID id) {
+        if(id == null) {
+            return null;
+        }
+        return dao.getById(id);
+    }
+
+    @Override
+    public List<T> select(T query) {
+        if(query == null) {
+            return null;
+        }
+        return dao.select(query);
+    }
+
+    @Override
+    public T selectOne(T query) {
+        if(query == null) {
+            return null;
+        }
+        query.setPage(1).setPageSize(1);
+        List<T> list = dao.select(query);
+        if(list != null && !list.isEmpty()) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<T> selectAll(T query) {
+        if(query == null) {
+            return Collections.emptyList();
+        }
+        query.setPageSize(dao.count(query));
+        return dao.select(query);
+    }
+
+    @Override
+    public int count(T query) {
+        if(query == null) {
+            return 0;
+        }
+        return dao.count(query);
+    }
+
+    @Override
+    public boolean exist(T query) {
+        if(query == null || query.getId() == null) {
+            return false;
+        }
+        return dao.exist(query.getId()) > 0;
+    }
+
+}

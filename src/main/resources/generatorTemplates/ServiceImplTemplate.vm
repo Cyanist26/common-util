@@ -1,0 +1,20 @@
+package $!{basePackage}$!{servicePackage}.impl;
+
+import $!{basePackage}$!{daoPackage}.$!{upperName}DAO;
+import $!{basePackage}$!{doPackage}.$!{upperName}DO;
+import $!{basePackage}$!{servicePackage}.$!{upperName}Service;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * $!{upperName} Service impl
+ *
+ * @author $!{author}
+ * @date $!{datetime}
+ */
+@Service("$!{lowerName}Service")
+@Transactional
+public class $!{upperName}ServiceImpl extends BaseServiceImpl<$!{upperName}DO, $!{idType}, $!{upperName}DAO> implements $!{upperName}Service {
+
+
+}

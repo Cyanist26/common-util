@@ -1,0 +1,274 @@
+package $!{basePackage}$!{doPackage};
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
+
+/**
+* 分页，排序及特殊查询参数
+*
+* @author cuiwq
+* @date 2018-09-26 星期三
+*/
+public class Query {
+
+    /**
+    * 默认页码
+    */
+    private static final int DEFAULT_PAGE = 1;
+
+    /**
+    * 默认分页大小
+    */
+    private static final int DEFAULT_PAGE_SIZE = 20;
+
+    /**
+    * 默认偏移量
+    */
+    private static final int DEFAULT_OFFSET = 0;
+
+    /**
+    * SQL注入正则表达式
+    */
+    private static final String INJECTION_REG = "(?:')|(?:--)|(/\\*(?:.|[\\n\\r])*?\\*/)|" +
+            "(\\b(SELECT|UPDATE|UNION|AND|OR|DELETE|INSERT|TRANCATE|CHAR|SUBSTR|ASCII|DECLARE|EXEC|COUNT|MASTER|INTO|DROP|EXECUTE)\\b)";
+
+    private static final Pattern INJECTION_PATTERN = Pattern.compile(INJECTION_REG, Pattern.CASE_INSENSITIVE);
+
+    /**
+    * 当前页码
+    */
+    private Integer page = DEFAULT_PAGE;
+
+    /**
+    * 当前分页大小
+    */
+    private Integer pageSize = DEFAULT_PAGE_SIZE;
+
+    /**
+    * 当前偏移量
+    */
+    private Integer offset = DEFAULT_OFFSET;
+
+    /**
+    * 分组条件
+    */
+    @JSONField(serialize = false, deserialize = false)
+    private List<String> groupBy;
+
+    /**
+    * 排序条件
+    */
+    private LinkedHashMap<String, Order> orderBy;
+
+    /**
+    * 特殊查询参数
+    */
+    private Map<String, Object> condition;
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public Query setPage(Integer page) {
+        this.page = page;
+        caculateOffset();
+        return this;
+    }
+
+    public Integer getPageSize() {
+    return pageSize;
+    }
+
+    public Query setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+        caculateOffset();
+        return this;
+    }
+
+    /**
+    * 手动设置偏移量，请谨慎使用！！<br/>
+    *  一般情况下不建议使用，直接使用{@link #setPage}或{@link #setPageSize}即可自动计算offset
+    *
+    * @param offset 偏移量
+    */
+    public void setOffset(Integer offset) {
+        this.offset = offset;
+    }
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public List<String> getGroupBy() {
+        return groupBy;
+    }
+
+    public LinkedHashMap<String, Order> getOrderBy() {
+        return orderBy;
+    }
+
+    public Map<String, Object> getCondition() {
+        return condition;
+    }
+
+    /**
+    * 对{@link #page}和{@link #pageSize}字段进行校验
+    */
+    private void verifyLimit() {
+        if(page == null || page < 1) {
+            page = DEFAULT_PAGE;
+        }
+        if(pageSize == null || pageSize < 1) {
+            pageSize = DEFAULT_PAGE_SIZE;
+        }
+    }
+
+    /**
+    * 计算offset
+    * @see #verifyLimit()
+    */
+    private void caculateOffset() {
+        verifyLimit();
+        offset = pageSize * (page - 1);
+    }
+
+    /**
+    * 添加分组条件
+    *
+    * @param field 分组字段名
+    */
+    private Query groupBy(String field) {
+        if(field != null) {
+            if(groupBy == null) {
+                groupBy = new ArrayList<>();
+            }
+            /* 拦截SQL注入，不允许添加 */
+            if(!INJECTION_PATTERN.matcher(field).find()) {
+                groupBy.add(field);
+            }
+        }
+        return this;
+    }
+
+    /**
+    * 删除分组条件
+    *
+    * @param field 排序字段名
+    */
+    public void removeGroupBy(String field) {
+        if(field != null && groupBy != null) {
+            groupBy.remove(field);
+        }
+    }
+
+    /**
+    * 添加排序条件，对field字段进行 <b>升序</b> 排序<br/>
+    * 优先级按添加顺序 <b>依次递减</b> <br/>
+    * 如发现传入的字段命中存在非法字符，不允许添加
+    *
+    * @param field 排序字段名
+    */
+    public Query orderByAsc(String field) {
+        modifyOrderBy(field, Order.ASC);
+        return this;
+    }
+
+    /**
+    * 添加排序条件，对field字段进行 <b>降序</b> 排序<br/>
+    * 优先级按添加顺序 <b>依次递减</b> <br/>
+    * 如发现传入的字段命中存在非法字符，不允许添加
+    *
+    * @param field 排序字段名
+    */
+    public Query orderByDesc(String field) {
+        modifyOrderBy(field, Order.DESC);
+        return this;
+    }
+
+    /**
+    * 添加排序条件的执行方法，添加前先进行SQL注入校验
+    *
+    * @param field 排序字段名
+    * @param order 顺序
+    */
+    private void modifyOrderBy(String field, Order order) {
+        if(field != null) {
+            if(orderBy == null) {
+                orderBy = new LinkedHashMap<>();
+            }
+            /* 拦截SQL注入，不允许添加 */
+            if(!INJECTION_PATTERN.matcher(field).find()) {
+                orderBy.put(field, order);
+            }
+        }
+    }
+
+    /**
+    * 删除排序条件
+    *
+    * @param field 排序字段名
+    */
+    public void removeOrderBy(String field) {
+        if(field != null && orderBy != null) {
+            orderBy.remove(field);
+        }
+    }
+
+    /**
+    * 添加或修改特殊查询参数
+    *
+    * @param key 参数名
+    * @param value 参数值
+    */
+    public void appendCondition(String key, Object value) {
+        if(key != null && value != null) {
+            if(condition == null) {
+                condition = new HashMap<>();
+            }
+            condition.put(key, value);
+        }
+    }
+
+    /**
+    * 添加不存在的特殊查询参数
+    *
+    * @param key 参数名
+    * @param value 参数值
+    */
+    public void appendConditionIfAbsent(String key, Object value) {
+        if(key != null && value != null) {
+            if(condition == null) {
+                condition = new HashMap<>();
+            }
+            condition.putIfAbsent(key, value);
+        }
+    }
+
+    /**
+    * 删除特殊查询参数
+    *
+    * @param key 参数名
+    */
+    public void removeCondition(String key) {
+        if(key != null && condition != null) {
+            condition.remove(key);
+        }
+    }
+
+    /**
+    * 排序条件
+    */
+    private enum Order {
+        /**
+        * 升序
+        */
+        ASC,
+        /**
+        * 降序
+        */
+        DESC
+    }
+
+}

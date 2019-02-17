@@ -1,0 +1,14 @@
+package $!{basePackage}$!{daoPackage};
+
+import $!{basePackage}$!{doPackage}.$!{upperName}DO;
+
+/**
+ * $!{tableRemark} DAO
+ *
+ * @author $!{author}
+ * @date $!{datetime}
+ */
+public interface $!{upperName}DAO extends BaseDAO<$!{upperName}DO, $!{idType}> {
+
+
+}
