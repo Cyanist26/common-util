@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.Writer;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * XStream工具类
@@ -39,9 +40,11 @@ public class XStreamUtil {
     
     private static final XStream COMPRESS_SELETIVE_CDATA_INSTANCE;
     
+    private static final Map<Class, XStream> INSTANCE_MAP = new ConcurrentHashMap<>(20);
+    
     static {
-        INSTANCE = new XStream(new DomDriver("UTF-8", new XmlFriendlyNameCoder("-_", "_")));
-        initInstance(INSTANCE);
+        INSTANCE = new XStream(new XppDriver(new XmlFriendlyNameCoder("-_", "_")));
+        initInstance(INSTANCE, true);
     
         COMPRESS_INSTANCE = new XStream(new XppDriver(new XmlFriendlyNameCoder("-_", "_")) {
             @Override
@@ -49,7 +52,7 @@ public class XStreamUtil {
                 return new CompactWriter(out, getNameCoder());
             }
         });
-        initInstance(COMPRESS_INSTANCE);
+        initInstance(COMPRESS_INSTANCE, true);
     
         CDATA_INSTANCE = new XStream(new XppDriver(new XmlFriendlyNameCoder("-_", "_")) {
             @Override
@@ -64,7 +67,7 @@ public class XStreamUtil {
                 };
             }
         });
-        initInstance(CDATA_INSTANCE);
+        initInstance(CDATA_INSTANCE, true);
     
         COMPRESS_CDATA_INSTANCE = new XStream(new XppDriver(new XmlFriendlyNameCoder("-_", "_")) {
             @Override
@@ -79,7 +82,7 @@ public class XStreamUtil {
                 };
             }
         });
-        initInstance(COMPRESS_CDATA_INSTANCE);
+        initInstance(COMPRESS_CDATA_INSTANCE, true);
     
         SELETIVE_CDATA_INSTANCE = new XStream(new XppDriver(new XmlFriendlyNameCoder("-_", "_")) {
             @Override
@@ -112,7 +115,7 @@ public class XStreamUtil {
                 };
             }
         });
-        initInstance(SELETIVE_CDATA_INSTANCE);
+        initInstance(SELETIVE_CDATA_INSTANCE, true);
     
         COMPRESS_SELETIVE_CDATA_INSTANCE = new XStream(new XppDriver(new XmlFriendlyNameCoder("-_", "_")) {
             @Override
@@ -144,7 +147,7 @@ public class XStreamUtil {
                 };
             }
         });
-        initInstance(COMPRESS_SELETIVE_CDATA_INSTANCE);
+        initInstance(COMPRESS_SELETIVE_CDATA_INSTANCE, true);
         
         log.info("init XStreamUtil success");
     }
@@ -192,18 +195,19 @@ public class XStreamUtil {
      */
     @SuppressWarnings("unchecked")
     public static <T> T toBean(String xml, Class<T> clazz) {
-        // 识别cls类中的注解
-        INSTANCE.processAnnotations(clazz);
-        // 设置JavaBean的类别名
-        INSTANCE.aliasType(ROOT_ALIAS, clazz);
-        return (T) INSTANCE.fromXML(xml);
+        if(xml == null) {
+            return null;
+        }
+        return (T) getDeserializeInstance(clazz).fromXML(xml);
     }
     
-    private static void initInstance(XStream instance) {
+    private static void initInstance(XStream instance, boolean processAlias) {
         XStream.setupDefaultSecurity(instance);
         instance.ignoreUnknownElements();
         registerConverter(instance);
-        processAlias(instance);
+        if(processAlias) {
+            processAlias(instance);
+        }
     }
     
     private static void registerConverter(XStream instance) {
@@ -228,6 +232,10 @@ public class XStreamUtil {
                 return CDATA_INSTANCE;
             case COMPRESS_CDATA:
                 return COMPRESS_CDATA_INSTANCE;
+            case PRETTY_SELETIVE_CDATA:
+                return SELETIVE_CDATA_INSTANCE;
+            case COMPRESS_SELETIVE_CDATA:
+                return COMPRESS_SELETIVE_CDATA_INSTANCE;
             case PRETTY:
             default:
                 return INSTANCE;
@@ -235,6 +243,9 @@ public class XStreamUtil {
     }
     
     private static String toXML(XStream instance, Object obj) {
+        if(obj == null) {
+            return null;
+        }
         // 识别obj类中的注解
         instance.processAnnotations(obj.getClass());
         // 设置JavaBean的类别名
@@ -242,11 +253,26 @@ public class XStreamUtil {
         return instance.toXML(obj);
     }
     
+    private static XStream getDeserializeInstance(Class clazz) {
+        XStream instance = INSTANCE_MAP.get(clazz);
+        if(instance == null) {
+            instance = new XStream(new DomDriver("UTF-8", new XmlFriendlyNameCoder("-_", "_")));
+            instance.allowTypes(new Class[] {clazz});
+            instance.alias(ROOT_ALIAS, clazz);
+            instance.processAnnotations(clazz);
+            initInstance(instance, false);
+            INSTANCE_MAP.putIfAbsent(clazz, instance);
+        }
+        return instance;
+    }
+    
     private enum SerializationType {
         PRETTY,
         COMPRESS,
         PRETTY_CDATA,
-        COMPRESS_CDATA
+        COMPRESS_CDATA,
+        PRETTY_SELETIVE_CDATA,
+        COMPRESS_SELETIVE_CDATA
     }
     
 }
