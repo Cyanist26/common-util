@@ -7,6 +7,50 @@ import java.util.*;
 
 public class Main {
     
+    /* HJ15 二进制1的个数 */
+    // public static void main(String[] args) throws IOException {
+    //     BufferedReader b = new BufferedReader(new InputStreamReader(System.in));
+    //     int i = Integer.parseInt(b.readLine());
+    //     String bin = Integer.toBinaryString(i);
+    //     int len = bin.length();
+    //     bin = bin.replaceAll("1", "");
+    //     System.out.println(len - bin.length());
+    // }
+    
+    /* HJ14 字符串排序 */
+    // public static void main(String[] args) throws IOException {
+    //     BufferedReader b = new BufferedReader(new InputStreamReader(System.in));
+    //     int count = Integer.parseInt(b.readLine());
+    //     String[] arr = new String[count];
+    //     for(int i = 0; i < count; i++) {
+    //         arr[i] = b.readLine();
+    //     }
+    //     Arrays.sort(arr);
+    //     for(String s : arr) {
+    //         System.out.println(s);
+    //     }
+    // }
+    
+    /* HJ13 句子逆序 */
+    // public static void main(String[] args) {
+    //     Scanner s = new Scanner(System.in);
+    //     String str = s.nextLine();
+    //     String[] arr = str.split(" ");
+    //     StringBuilder sb = new StringBuilder();
+    //     for(int i = arr.length - 1; i >= 0; i--) {
+    //         sb.append(arr[i]).append(" ");
+    //     }
+    //     sb.deleteCharAt(sb.length() - 1);
+    //     System.out.println(sb.toString());
+    // }
+    
+    /* HJ11 数字颠倒  HJ12 字符串反转 */
+    // public static void main(String[] args) {
+    //     Scanner s = new Scanner(System.in);
+    //     StringBuilder sb = new StringBuilder(s.nextLine());
+    //     System.out.println(sb.reverse().toString());
+    // }
+    
     /* HJ10 字符个数统计 */
     // public static void main(String[] args) {
     //     Scanner s = new Scanner(System.in);
@@ -147,7 +191,7 @@ public class Main {
     // }
     
     /*  */
-    // public static void main(String[] args) {
+    // public static void main(String[] args) throws IOException {
     //     Scanner s = new Scanner(System.in);
     //     String str = s.nextLine();
     //     BufferedReader b = new BufferedReader(new InputStreamReader(System.in));
