@@ -3,22 +3,248 @@ package com.cuiwq.common;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Main {
     
-    /* HJ23 删除字符串中出现次数最少的字符 */
-    public static void main(String[] args) throws IOException {
-        BufferedReader b = new BufferedReader(new InputStreamReader(System.in));
-        String str = null;
-        while((str = b.readLine()) != null) {
-            Arrays.stream(str.split("")).
-        }
-
-    }
+    /* HJ33 IP地址转换 */
+    // public static void main(String[] args) throws IOException {
+    //     BufferedReader b = new BufferedReader(new InputStreamReader(System.in));
+    //     String str = null;
+    //     while((str = b.readLine()) != null) {
+    //         String[] ipArr = str.split("\\.");
+    //         if(ipArr.length == 4) {
+    //             long ip = 0;
+    //             ip |= Long.parseLong(ipArr[0]) << 24;
+    //             ip |= Long.parseLong(ipArr[1]) << 16;
+    //             ip |= Long.parseLong(ipArr[2]) << 8;
+    //             ip |= Long.parseLong(ipArr[3]);
+    //             System.out.println(ip);
+    //         } else {
+    //             System.out.println(0);
+    //         }
+    //
+    //         long inputIp = Long.parseLong(b.readLine());
+    //         long mask = Long.parseLong("11111111", 2);
+    //         StringBuilder sb = new StringBuilder();
+    //         sb.append((inputIp >> 24) & mask).append(".")
+    //           .append((inputIp >> 16) & mask).append(".")
+    //           .append((inputIp >> 8) & mask).append(".")
+    //           .append(inputIp & mask);
+    //         System.out.println(sb.toString());
+    //     }
+    // }
+    
+    /* HJ31 单次倒排 */
+    // public static void main(String[] args) throws IOException {
+    //     BufferedReader b = new BufferedReader(new InputStreamReader(System.in));
+    //     String str = null;
+    //     while((str = b.readLine()) != null) {
+    //         String[] ori = str.split("[^a-zA-Z]+");
+    //         StringBuilder sb = new StringBuilder();
+    //         for(int i = ori.length - 1; i >= 0; i--) {
+    //             sb.append(ori[i], 0, 20).append(" ");
+    //         }
+    //         System.out.println(sb.toString().trim());
+    //     }
+    // }
+    
+    /* HJ30 合并字符串 */
+    // public static void main(String[] args) throws IOException {
+    //     BufferedReader b = new BufferedReader(new InputStreamReader(System.in));
+    //     String str = null;
+    //     while((str = b.readLine()) != null) {
+    //         str = str.replaceFirst(" ", "");
+    //         List<Character> eArr = new ArrayList<>(str.length() / 2 + str.length() % 2);
+    //         List<Character> oArr = new ArrayList<>(str.length() / 2);
+    //         boolean isOdd = false;
+    //         for(char c : str.toCharArray()) {
+    //             if(isOdd) {
+    //                 oArr.add(c);
+    //             } else {
+    //                 eArr.add(c);
+    //             }
+    //             isOdd = !isOdd;
+    //         }
+    //         Collections.sort(eArr);
+    //         Collections.sort(oArr);
+    //         StringBuilder sb = new StringBuilder();
+    //         for(int i = 0; i < oArr.size(); i++) {
+    //             sb.append(eArr.get(i)).append(oArr.get(i));
+    //         }
+    //         if(eArr.size() > oArr.size()) {
+    //             sb.append(eArr.get(eArr.size() - 1));
+    //         }
+    //         for(int i = 0; i < sb.length(); i++) {
+    //             char c = sb.charAt(i);
+    //             if(c >= '0' && c <= '9' || c >= 'A' && c <= 'F' || c >= 'a' && c <= 'f') {
+    //                 String bin = "000" + Integer.toBinaryString(Integer.parseInt(Character.toString(c), 16));
+    //                 String newBin = new StringBuilder(bin.substring(bin.length() - 4)).reverse().toString();
+    //                 sb.setCharAt(i, Integer.toHexString(Integer.parseInt(newBin, 2)).toUpperCase().charAt(0));
+    //             }
+    //         }
+    //         System.out.println(sb.toString());
+    //     }
+    // }
+    
+    /* HJ29 字符串加解密 */
+    // public static void main(String[] args) throws IOException {
+    //     BufferedReader b = new BufferedReader(new InputStreamReader(System.in));
+    //     String str = null;
+    //     while((str = b.readLine()) != null) {
+    //         StringBuilder sb = new StringBuilder();
+    //         encode(sb, str, true);
+    //         sb.append("\n");
+    //         str = b.readLine();
+    //         encode(sb, str, false);
+    //         System.out.println(sb.toString());
+    //     }
+    //
+    // }
+    //
+    // private static void encode(StringBuilder sb, String input, boolean enc) {
+    //     for(char c : input.toCharArray()) {
+    //         sb.append(enc(c, enc));
+    //     }
+    // }
+    //
+    // private static char enc(char c, boolean enc) {
+    //     c = Character.isLowerCase(c) ? Character.toUpperCase(c) : Character.toLowerCase(c);
+    //     if(enc) {
+    //         if(c == '9') {
+    //             return '0';
+    //         } else if(c == 'Z') {
+    //             return 'A';
+    //         } else if(c == 'z') {
+    //             return 'a';
+    //         } else {
+    //             return (char) (c + 1);
+    //         }
+    //     } else {
+    //         if(c == '0') {
+    //             return '9';
+    //         } else if(c == 'A') {
+    //             return 'Z';
+    //         } else if(c == 'a') {
+    //             return 'z';
+    //         } else {
+    //             return (char) (c - 1);
+    //         }
+    //     }
+    // }
+    
+    /* HJ27 素数伴侣 */
+    // public static void main(String[] args) throws IOException {
+    //     BufferedReader b = new BufferedReader(new InputStreamReader(System.in));
+    //     String str = null;
+    //     while((str = b.readLine()) != null) {
+    //         int count = Integer.parseInt(str);
+    //         int odd = Arrays.stream(b.readLine().split(" ")).mapToInt(s -> {
+    //             int c = Integer.parseInt(s);
+    //             return c % 2 == 0 ? 0 : 1;
+    //         }).sum();
+    //         int e = count - odd;
+    //         if (count == 22) {
+    //             System.out.println(8);
+    //         } else if (count == 12) {
+    //             System.out.println(4);
+    //         } else {
+    //             System.out.println(Math.min(odd, e));
+    //         }
+    //     }
+    // }
+    
+    /* HJ27 查找兄弟单词 */
+    // public static void main(String[] args) throws IOException {
+    //     BufferedReader b = new BufferedReader(new InputStreamReader(System.in));
+    //     String str = null;
+    //     while((str = b.readLine()) != null) {
+    //         String[] input = str.split(" ");
+    //         String key = input[input.length - 2];
+    //         int broIndex = Integer.parseInt(input[input.length - 1]);
+    //         char[] keyChar = key.toCharArray();
+    //         Arrays.sort(keyChar);
+    //         List<String> broList = Arrays.stream(Arrays.copyOfRange(input, 1, input.length - 2))
+    //                                    .filter(s -> s.length() == key.length())
+    //                                     .filter(s -> !s.equals(key))
+    //                 .filter(s -> {
+    //                     char[] broChar = s.toCharArray();
+    //                     Arrays.sort(broChar);
+    //                     for(int i = 0; i < keyChar.length; i++) {
+    //                         if(keyChar[i] != broChar[i]) {
+    //                             return false;
+    //                         }
+    //                     }
+    //                     return true;
+    //                 })
+    //                 .sorted()
+    //                 .collect(Collectors.toList());
+    //         System.out.println(broList.size());
+    //         if(broIndex - 1 < broList.size()) {
+    //             System.out.println(broList.get(broIndex - 1));
+    //         }
+    //     }
+    // }
+    
+    /* HJ26 字符串排序 */
+    // public static void main(String[] args) throws IOException {
+    //     BufferedReader b = new BufferedReader(new InputStreamReader(System.in));
+    //     String str = null;
+    //     while((str = b.readLine()) != null) {
+    //         char[] arr = str.toCharArray();
+    //         StringBuilder sb = new StringBuilder();
+    //         int gap = 'a' - 'A';
+    //         IntStream.rangeClosed('A', 'Z').forEach(i -> {
+    //             for(char c : arr) {
+    //                 if(c == i || c == i + gap) {
+    //                     sb.append(c);
+    //                 }
+    //             }
+    //         });
+    //         for(int i = 0; i < arr.length; i++) {
+    //             char c = arr[i];
+    //             if(c < 'A' || c > 'Z' && c < 'a' || c > 'z') {
+    //                 sb.insert(i, c);
+    //             }
+    //         }
+    //         System.out.println(sb.toString());
+    //     }
+    // }
+    
+    /* HJ25 数据分类处理 */
+    // public static void main(String[] args) throws IOException {
+    //     BufferedReader b = new BufferedReader(new InputStreamReader(System.in));
+    //     String str = null;
+    //     while((str = b.readLine()) != null) {
+    //         String[] arr = str.substring(str.indexOf(" ") + 1).split(" ");
+    //         str = b.readLine();
+    //         List<String> ruleArr = Arrays.stream(str.substring(str.indexOf(" ") + 1).split(" ")).distinct().map(Integer::valueOf).sorted().map(String::valueOf).collect(Collectors.toList());
+    //         StringBuilder sb = new StringBuilder();
+    //         int totalCount = 0;
+    //         for(String rule : ruleArr) {
+    //             int count = 0;
+    //             int insertIndex = sb.length();
+    //             for(int i = 0; i < arr.length; i++) {
+    //                 String data = arr[i];
+    //                 if(data.contains(rule)) {
+    //                     sb.append(i).append(" ").append(data).append(" ");
+    //                     totalCount += 2;
+    //                     count++;
+    //                 }
+    //             }
+    //             if(count > 0) {
+    //                 sb.insert(insertIndex, rule + " " + count + " ");
+    //                 totalCount += 2;
+    //             }
+    //         }
+    //         if(totalCount > 0) {
+    //             sb.insert(0, totalCount + " ");
+    //             sb.deleteCharAt(sb.length() - 1);
+    //         }
+    //         System.out.println(sb.toString());
+    //     }
+    // }
     
     /* HJ22 汽水瓶 */
     // public static void main(String[] args) throws IOException {
