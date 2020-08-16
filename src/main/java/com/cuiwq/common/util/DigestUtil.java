@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 /**
  * @author cuiwq
- * @create 2018-12-19 星期三
+ * @date 2018-12-19 星期三
  */
 public class DigestUtil {
     

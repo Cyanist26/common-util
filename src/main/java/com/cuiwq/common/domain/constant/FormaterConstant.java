@@ -18,6 +18,8 @@ public class FormaterConstant {
     
     public static final String DATE_PATTERN = "yyyy-MM-dd";
     
+    public static final String CN_DATE_PATTERN = "yyyy年MM月dd日";
+    
     public static final String MONTH_DATE_PATTERN = "MM-dd";
     
     public static final String COMPACT_DATE_PATTERN = "yyyyMMdd";
@@ -32,10 +34,12 @@ public class FormaterConstant {
     
     public static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
     
+    public static final DateTimeFormatter cnDateFormatter = DateTimeFormatter.ofPattern(CN_DATE_PATTERN);
+    
     public static final DateTimeFormatter monthDateFormatter = DateTimeFormatter.ofPattern(MONTH_DATE_PATTERN);
     
     public static final DateTimeFormatter compactDateFormatter = DateTimeFormatter.ofPattern(COMPACT_DATE_PATTERN);
     
-    public static final DateTimeFormatter shortestDatetimeFormatter = DateTimeFormatter.ofPattern(SHORTEST_DATE_PATTERN);
+    public static final DateTimeFormatter shortestDateFormatter = DateTimeFormatter.ofPattern(SHORTEST_DATE_PATTERN);
     
 }
