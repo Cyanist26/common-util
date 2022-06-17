@@ -29,7 +29,7 @@
         <mybatis.version>3.4.6</mybatis.version>
         <velocity.version>1.7</velocity.version>
         <aspectj.version>1.8.13</aspectj.version>
-        <fastjson.version>1.2.55</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <xstream.version>1.4.11</xstream.version>
     </properties>
 
